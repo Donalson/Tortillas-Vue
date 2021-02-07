@@ -2,7 +2,7 @@
   <v-container text-aling-center>
     <v-row class="justify-center" wrap>
 
-      <v-col cols="12" colmd="6"
+      <v-col xs="6"
           v-for="(card, index) in cards" :key="index">
           <v-card>
             <v-img
