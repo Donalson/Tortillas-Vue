@@ -3,7 +3,7 @@
 
     <v-app-bar app color="success" dark dense>
 
-      <v-app-bar-nav-icon @click="mver = !mver"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="mver = !mver" class="d-md-none"></v-app-bar-nav-icon>
 
       <div class="d-flex align-center">
         <v-img
@@ -18,11 +18,12 @@
 
       <v-toolbar-title>Antojitos Heidy</v-toolbar-title>
       <v-spacer></v-spacer>
-
-      <v-btn plain> Pedidos <v-icon right>mdi-view-list-outline</v-icon></v-btn>
-      <v-btn plain> Clientes <v-icon right>mdi-account</v-icon></v-btn>
-      <v-btn plain> Tortillas <v-icon right>mdi-alpha-t-circle</v-icon></v-btn>
-      <v-btn plain> Ventas <v-icon right>mdi-receipt</v-icon></v-btn>
+      <div class="d-none d-md-block">
+        <v-btn plain> Pedidos <v-icon right>mdi-view-list-outline</v-icon></v-btn>
+        <v-btn plain> Clientes <v-icon right>mdi-account</v-icon></v-btn>
+        <v-btn plain> Tortillas <v-icon right>mdi-alpha-t-circle</v-icon></v-btn>
+        <v-btn plain> Ventas <v-icon right>mdi-receipt</v-icon></v-btn>
+      </div>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
