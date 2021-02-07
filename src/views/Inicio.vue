@@ -2,9 +2,9 @@
   <v-container text-aling-center>
     <v-row class="justify-center" wrap>
 
-      <v-col cols="6"
+      <v-col cols="6" md="4"
           v-for="(card, index) in cards" :key="index">
-          <v-card>
+          <v-card :to="'/'+card.Desc">
             <v-img
               :src="card.src"
               class="black--text align-end"

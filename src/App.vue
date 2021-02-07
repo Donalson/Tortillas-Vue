@@ -2,7 +2,7 @@
   <v-app>
 
     <v-app-bar app color="success" dark dense>
-
+      
       <v-app-bar-nav-icon @click="mver = !mver" class="d-md-none"></v-app-bar-nav-icon>
 
       <div class="d-flex align-center">
@@ -16,17 +16,14 @@
         />
       </div>
 
-      <v-toolbar-title>Antojitos Heidy</v-toolbar-title>
+      <v-toolbar-title><v-btn plain to="/">Antojitos Heidy</v-btn></v-toolbar-title>
       <v-spacer></v-spacer>
       <div class="d-none d-md-block">
-        <v-btn plain> Pedidos <v-icon right>mdi-view-list-outline</v-icon></v-btn>
-        <v-btn plain> Clientes <v-icon right>mdi-account</v-icon></v-btn>
-        <v-btn plain> Tortillas <v-icon right>mdi-alpha-t-circle</v-icon></v-btn>
-        <v-btn plain> Ventas <v-icon right>mdi-receipt</v-icon></v-btn>
+        <v-btn plain to="/Pedidos"> Pedidos <v-icon right>mdi-view-list-outline</v-icon></v-btn>
+        <v-btn plain to="/Clientes"> Clientes <v-icon right>mdi-account</v-icon></v-btn>
+        <v-btn plain to="/Tortillas"> Tortillas <v-icon right>mdi-alpha-t-circle</v-icon></v-btn>
+        <v-btn plain to="/Ventas"> Ventas <v-icon right>mdi-receipt</v-icon></v-btn>
       </div>
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
 
     </v-app-bar>
 
@@ -38,7 +35,7 @@
         </v-col>
         <v-col cols="4"></v-col>
         <v-col cols="12" class="text-center">
-          <p class="white--text headline">Antojitos Heidy</p>
+          <v-btn plain to="/"><p class="white--text headline">Antojitos Heidy</p></v-btn>
         </v-col>
         <v-col cols="12">
 
@@ -46,7 +43,7 @@
             
             <v-list-item-group class="white--text">
 
-              <v-list-item>
+              <v-list-item to="/Pedidos">
                 <v-list-item-icon>
                   <v-icon>mdi-view-list-outline</v-icon>
                   <v-list-item-content>
@@ -55,7 +52,7 @@
                 </v-list-item-icon>
               </v-list-item>
 
-              <v-list-item>
+              <v-list-item to="/Clientes">
                 <v-list-item-icon>
                   <v-icon>mdi-account</v-icon>
                   <v-list-item-content>
@@ -64,7 +61,7 @@
                 </v-list-item-icon>
               </v-list-item>
 
-              <v-list-item>
+              <v-list-item to="/Tortillas">
                 <v-list-item-icon>
                   <v-icon>mdi-alpha-t-circle</v-icon>
                   <v-list-item-content>
@@ -73,7 +70,7 @@
                 </v-list-item-icon>
               </v-list-item>
 
-              <v-list-item>
+              <v-list-item to="/Ventas">
                 <v-list-item-icon>
                   <v-icon>mdi-receipt</v-icon>
                   <v-list-item-content>
