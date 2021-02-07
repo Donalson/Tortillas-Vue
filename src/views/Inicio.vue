@@ -2,14 +2,13 @@
   <v-container text-aling-center>
     <v-row class="justify-center" wrap>
 
-      <v-col
+      <v-col cols="6"
           v-for="(card, index) in cards" :key="index">
           <v-card>
             <v-img
               :src="card.src"
               class="black--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="200px"
+              height="20%"
             >
               <v-card-title v-text="card.Desc"></v-card-title>
             </v-img>
@@ -27,10 +26,10 @@ export default {
 
   data: () => ({
       cards: [
-        { Desc: 'Pedidos', src: '../assets/Ordenes.png', flex: 6 },
-        { Desc: 'Clientes', src: '../assets/Clientes.png', flex: 6 },
-        { Desc: 'Tortillas', src: '../assets/Tortilla.png', flex: 6 },
-        { Desc: 'Ventas', src: '../assets/Ventas.png', flex: 6 },
+        { Desc: 'Pedidos', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Ordenes.png', flex: 6 },
+        { Desc: 'Clientes', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Clientes.png', flex: 6 },
+        { Desc: 'Tortillas', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Tortilla.png', flex: 6 },
+        { Desc: 'Ventas', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Ventas.png', flex: 6 },
       ],
     }),
     
