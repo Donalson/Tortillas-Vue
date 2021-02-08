@@ -2,82 +2,104 @@
   <v-container>
       <v-row wrap class="mt-5">
           <v-col>
-            <v-card>
-                <v-card-title>
-                    Clientes
-                <v-spacer></v-spacer>
-                <v-text-field
-                    v-model="Buscar"
-                    append-icon="mdi-magnify"
-                    label="Buscar"
-                    single-line
-                    hide-details
-                ></v-text-field>
-                </v-card-title>
-               <v-data-table dense fixed-header
-                    :headers="Encabezados"
-                    :items="Clientes"
-                    :items-per-page="5"
-                    :search="Buscar"
-                    class="elevation-1"
-                >
-                    <template v-slot:top>
-                        <v-toolbar flat>
-                            <v-toolbar-title>Clientes</v-toolbar-title>
-                            <v-divider class="mx-4" inset vertical></v-divider>
-                            <v-spacer></v-spacer>
-                            <v-dialog v-model="CD">
-                                <template v-slot:activator="{ on, attrs}">
-                                    <v-btn color="success" dark class="mb-2" v-bind="attrs" v-on="on">Nuevo Cliente</v-btn>
-                                </template>
-                                <v-card>
-                                    <v-card-title><span class="headline">{{ TituloFormulario }}</span></v-card-title>
-                                    <v-card-text>
-                                        <v-container>
-                                            <v-row>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Nombres" label="Nombres"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Apellidos" label="Apellidos"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Direccion" label="Direccion"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Telefono" label="Telefono"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Nit" label="Nit"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Adelanto" label="Adelanto"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Debe" label="Debe"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Observacion" label="Anotaciones"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Foto" label="Foto"></v-text-field></v-col>
-                                                <v-col cols="12" sm="6" md="4"><v-text-field v-model="CEdit.Activo" label="Activo"></v-text-field></v-col>
-                                            </v-row>
-                                        </v-container>
-                                    </v-card-text>
+              
+              <v-dialog v-model="Modal" persistent>
+                  <template v-slot:activator="{ on, attrs}">
+                      <v-btn color="green" dark v-bind="attrs" v-on="on">Registrar Cliente</v-btn>
+                  </template>
+                  <v-card>
+                      <v-card-title>
+                          <span class="headline" v-if="ModoEdicion">Editar Cliente</span>
+                          <span class="headline" v-else>Registrar Cliente</span>
+                      </v-card-title>
+                      <v-card-text>
+                          <v-container>
+                              <v-row>
+                                  <v-col cols="12" sm="6" md="4" v-if="ModoEdicion">
+                                      <v-text-field prepend-icon="mdi-alpha-c-circle" label="Cod." disabled 
+                                      v-model="Cliente.IdCliente" color="green"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-account" label="Nombres" required 
+                                      v-model="Cliente.Nombres" color="green" maxlength="30"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-account" label="Apellidos" required 
+                                      v-model="Cliente.Apellidos" color="green" maxlength="30"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-directions" label="Direccion" required
+                                       v-model="Cliente.Direccion" color="green" maxlength="50"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-cellphone" label="Telefono" required
+                                       v-model="Cliente.Telefono" color="green" type="number"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-file-document" label="NIT" required
+                                       v-model="Cliente.Nit" color="green" maxlength="15"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-head-question-outline" label="Adelanto" required
+                                       v-model="Cliente.Adelanto" color="green" type="number"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-head-question-outline" label="Debe" required
+                                       v-model="Cliente.Debe" color="green" type="number"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-clipboard-text" label="Anotaciones" required
+                                       v-model="Cliente.Observacion" color="green"></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" sm="6" md="4">
+                                      <v-text-field prepend-icon="mdi-card-account-phone" label="Foto" required
+                                      v-model="Cliente.Foto" color="green"></v-text-field>
+                                  </v-col>
+                              </v-row>
+                          </v-container>
+                      </v-card-text>
+                      <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn v-if="ModoEdicion" color="green" text @click="Actualizar()">Actualizar <v-icon right>mdi-pencil</v-icon></v-btn>
+                          <v-btn v-else color="green" text @click="Agregar()">Guardar <v-icon right>mdi-content-save</v-icon></v-btn>
+                          <v-btn color="red" text @click="Limpiar">Cancelar <v-icon right>mdi-cancel</v-icon></v-btn>
+                      </v-card-actions>
+                  </v-card>
+              </v-dialog>
 
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn color="success" text @click="Guardar">Registrar</v-btn>
-                                        <v-btn color="danger" text @click="Cerrar">Cancelar</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                            <v-dialog v-model="CDD">
-                                <v-card>
-                                    <v-card-title class="headline">Desea macar como inactivo al cliente?</v-card-title>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn color="warning" text @click="ConfirmarBorrado">Si</v-btn>
-                                        <v-btn color="danger" text @click="CerrarBorrar">Cancelar</v-btn>
-                                        <v-spacer></v-spacer>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </v-toolbar>
-                    </template>
-                    <template v-slot: item.actions="{ item }">
-                        <v-icon small class="mr-2" @click="EditarCliente(item)">mdi-pencil</v-icon>
-                        <v-icon small @click="BorrarCliente(item)">mdi-delete</v-icon>
-                    </template>
-                    <template v:slot:no-data>
-                        <v-btn color="success" @click="GetClientes">Actualizar</v-btn>
-                    </template>
-                </v-data-table>
-            </v-card>
+              <v-simple-table fixed-header>
+                  <template v-slot:default>
+                      <thead>
+                          <tr>
+                              <th class="text-left">Cod.</th>
+                              <th class="text-left">Nombre</th>
+                              <th class="text-left">Direccion</th>
+                              <th class="text-left">Telefono</th>
+                              <th class="text-left">NIT</th>
+                              <th class="text-left">Adelanto</th>
+                              <th class="text-left">Debe</th>
+                              <th class="text-left">Observacion</th>
+                              <th class="text-left">Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr v-for="(item, index) in Clientes" :key="index">
+                              <td>{{ item.IdCliente }}</td>
+                              <td>{{ item.Nombres }} {{ item.Apellidos }}</td>
+                              <td>{{ item.Direccion }}</td>
+                              <td>{{ item.Telefono }}</td>
+                              <td>{{ item.Nit }}</td>
+                              <td>{{ item.Adelanto }}</td>
+                              <td>{{ item.Debe }}</td>
+                              <td>{{ item.Observacion }}</td>
+                              <td>
+                                  <v-icon small class="mr-2" @click="Editar(item)">mdi-pencil</v-icon>
+                                  <v-icon small @click="Eliminar(item, index)">mdi-delete</v-icon>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </template>
+              </v-simple-table>
           </v-col>
       </v-row>
   </v-container>
@@ -88,61 +110,34 @@ import axios from "axios";
 export default {
     data(){
         return{
-            Buscar: '',
-            CD: false,
-            CDD: false,
-            EditIndex: -1,
-            
-            CEdit:{
-                IdCliente: 0,
-                Nombres: '',
-                Apellidos: '',
-                Direccion: '',
-                Telefono: '',
-                Nit: '',
-                Adelanto: 0,
-                Debe: 0,
-                Observcion: '',
-                Foto: '',
-                Activo: '',
-
-            },
-            CDef:{
-                IdCliente: 0,
-                Nombres: '',
-                Apellidos: '',
-                Direccion: '',
-                Telefono: '',
-                Nit: '',
-                Adelanto: 0,
-                Debe: 0,
-                Observcion: '',
-                Foto: '',
-                Activo: '',
-
-            },
-
-            Encabezados: [
-                { text: 'Cod.', align: 'start', sortable: false, value: 'IdCliente', },
-                { text: 'Nombres', value: 'Nombres' },
-                { text: 'Apellidos', value: 'Apellidos' },
-                { text: 'Direccion', value: 'Direccion' },
-                { text: 'Celular', value: 'Telefono' },
-                { text: 'Nit', value: 'Nit' },
-                { text: 'D. Adelantado', value: 'Adelanto' },
-                { text: 'D. Restante', value: 'Debe' },
-                { text: 'Anotaciones', value: 'Observaciones' },
-                { text: 'Foto', value: 'Foto' },
-                { text: 'Fecha de Registro', value: 'FC' },
-                { text: 'Fecha de Modificacion', value: 'FE' },
-            ],
 
             Clientes: [],
+            Modal: false,
+            ModoEdicion: false,
+            
+            Cliente:{
+                IdCliente: 0,
+                Nombres: '',
+                Apellidos: '',
+                Direccion: '',
+                Telefono: '',
+                Nit: '',
+                Adelanto: 0,
+                Debe: 0,
+                Observacion: '',
+                Foto: '',
+            },
         }
     },
 
+    created(){
+        //Obtener Lista de clientes cuando se carga la vista de clientes
+        this.GetClientes();
+    },
+
     methods:{
-        async GetClientes(){
+
+        GetClientes(){
             try{
                 axios.get(`http://192.168.1.4:3000/Clientes`).then(res=>{
                     this.Clientes = res.data;
@@ -152,66 +147,52 @@ export default {
             }
         },
 
-        EditarCliente (item) {
-            this.EditIndex = this.Clientes.indexOf(item)
-            this.CEdit = Object.assign({}, item)
-            this.CDD = true
+        Agregar(){
+            var params = new  FormData();
+        },
+        
+        Actualizar(){
+
         },
 
-        BorrarCliente (item) {
-            this.EditIndex = this.Clientes.indexOf(item)
-            this.CEdit = Object.assign({}, item)
-            this.CCD = true
-        },
-
-        ConfirmarBorrado () {
-            this.Clientes.splice(this.EditIndex, 1)
-            this.CerrarBorrar()
-        },
-
-        Cerrar () {
-            this.CD = false
-            this.$nextTick(() => {
-                this.CEdit = Object.assign({}, this.CDef)
-                this.EditIndex = -1
+        Eliminar(item, index){
+            axios.delete(`http://192.168.1.4:3000/Clientes/${item.IdCliente}`)
+            .then(()=>{
+                this.Clientes.splice(index, 1);
+            }).catch(error=>{
+                alert(error)
             })
         },
 
-        CerrarBorrar () {
-            this.CDD = false
-            this.$nextTick(() => {
-                this.CEdit = Object.assign({}, this.CDef)
-                this.EditIndex = -1
-            })
+        Editar(item){
+            this.ModoEdicion = true;
+            this.Cliente.IdCliente = item.IdCliente
+            this.Cliente.Nombres = item.Nombres
+            this.Cliente.Apellidos = item.Apellidos
+            this.Cliente.Direccion = item.Direccion
+            this.Cliente.Telefono = item.Telefono
+            this.Cliente.Nit = item.Nit
+            this.Cliente.Adelanto = item.Adelanto
+            this.Cliente.Debe = item.Debe
+            this.Cliente.Observacion = item.Observacion
+            this.Cliente.Foto = item.Foto
+            this.Modal = true;
         },
 
-        Guardar () {
-            if(this.EditIndex > -1) {
-                Object.assign(this.Clientes[this.EditIndex], this.CEdit)
-            } else {
-                this.Clientes.push(this.CEdit)
-            }
-            this.Cerrar()
-        }
-    },
-
-    created(){
-        this.GetClientes();
-    },
-
-    computed: {
-        TituloFormulario (){
-            return this.EditIndex === -1 ? 'Registrar Cliente' : 'Editar Cliente'
+        Limpiar(){
+            this.Modal = false
+            this.ModoEdicion = false
+            this.Cliente.IdCliente= 0
+            this.Cliente.Nombres= ''
+            this.Cliente.Apellidos= ''
+            this.Cliente.Direccion= ''
+            this.Cliente.Telefono= ''
+            this.Cliente.Nit= ''
+            this.Cliente.Adelanto= 0
+            this.Cliente.Debe = 0
+            this.Cliente.Observacion = ''
+            this.Cliente.Foto = ''
         },
-    },
-
-    watch: {
-        CD (val) {
-            val || this.Cerrar()
-        },
-        CDD (val) {
-            val || this.CerrarBorrar()
-        }
     },
 }
 </script>
