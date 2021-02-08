@@ -11,6 +11,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
+import VueAlertify from 'vue-alertify'
+Vue.use(VueAlertify)
+
 Vue.config.productionTip = false
 
 new Vue({

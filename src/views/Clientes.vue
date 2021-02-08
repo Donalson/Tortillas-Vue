@@ -55,6 +55,10 @@
                                       <v-text-field prepend-icon="mdi-card-account-phone" label="Foto" required
                                       v-model="Cliente.Foto" color="green"></v-text-field>
                                   </v-col>
+                                  <v-col cols="12" sm="6" md="4" v-if="ModoEdicion">
+                                      <v-checkbox prepend-icon="mdi-alpha-a-circle" label="Activo" required
+                                      v-model="Cliente.Activo" color="green"></v-checkbox>
+                                  </v-col>
                               </v-row>
                           </v-container>
                       </v-card-text>
@@ -93,8 +97,8 @@
                               <td>{{ item.Debe }}</td>
                               <td>{{ item.Observacion }}</td>
                               <td>
-                                  <v-icon small class="mr-2" @click="Editar(item)">mdi-pencil</v-icon>
-                                  <v-icon small @click="Eliminar(item, index)">mdi-delete</v-icon>
+                                  <v-icon small color="yellow" class="mr-2" @click="Editar(item)">mdi-pencil</v-icon>
+                                  <v-icon small color="red" @click="Eliminar(item, index)">mdi-delete</v-icon>
                               </td>
                           </tr>
                       </tbody>
@@ -107,6 +111,7 @@
 
 <script>
 import axios from "axios";
+import alertify from "vue-alertify";
 export default {
     data(){
         return{
@@ -126,6 +131,7 @@ export default {
                 Debe: 0,
                 Observacion: '',
                 Foto: '',
+                Activo: true,
             },
         }
     },
@@ -148,20 +154,63 @@ export default {
         },
 
         Agregar(){
-            var params = new  FormData();
+            if(this.Cliente.Nombres.length > 0 && this.Cliente.Apellidos.length > 0 && this.Cliente.Direccion.length > 0){
+                if(this.Cliente.Nit.length == 0){this.Cliente.Nit = 'C/F'}
+                var params = {
+                    Nombres: this.Cliente.Nombres, Apellidos: this.Cliente.Apellidos,
+                    Direccion: this.Cliente.Direccion, Telefono: this.Cliente.Telefono,
+                    Nit: this.Cliente.Nit, Adelanto: this.Cliente.Adelanto,
+                    Debe: this.Cliente.Debe, Observacion: this.Cliente.Observacion,
+                    Foto: this.Cliente.Foto
+                }
+                axios.post(`http://192.168.1.4:3000/Clientes`, params).then(res=>{
+                    this.GetClientes();this.Modal = false;
+                    this.Limpiar();
+                    this.$alertify.success('Cliente Registrado');
+                }).catch(error=>{
+                    this.$alertify.error(error);
+                });
+            }else{
+                this.$alertify.error('Complete el formulario primero')
+            }
         },
         
         Actualizar(){
-
+             if(this.Cliente.Nombres.length > 0 && this.Cliente.Apellidos.length > 0 && this.Cliente.Direccion.length > 0){
+                if(this.Cliente.Nit.length == 0){this.Cliente.Nit = 'C/F'}
+                var params = {
+                    Nombres: this.Cliente.Nombres, Apellidos: this.Cliente.Apellidos,
+                    Direccion: this.Cliente.Direccion, Telefono: this.Cliente.Telefono,
+                    Nit: this.Cliente.Nit, Adelanto: this.Cliente.Adelanto,
+                    Debe: this.Cliente.Debe, Observacion: this.Cliente.Observacion,
+                    Foto: this.Cliente.Foto, Activo: this.Cliente.Activo
+                }
+                axios.put(`http://192.168.1.4:3000/Clientes/${this.Cliente.IdCliente}`, params).then(res=>{
+                    this.GetClientes();this.Modal = false;
+                    this.Limpiar();
+                    this.$alertify.success('Cliente Actualizado');
+                }).catch(error=>{
+                    this.$alertify.error(error);
+                });
+            }else{
+                this.$alertify.error('Complete el formulario primero')
+            }
         },
 
         Eliminar(item, index){
-            axios.delete(`http://192.168.1.4:3000/Clientes/${item.IdCliente}`)
-            .then(()=>{
-                this.Clientes.splice(index, 1);
-            }).catch(error=>{
-                alert(error)
-            })
+            this.$alertify.confirmWithTitle(
+                'Inactivar Cliente',
+                'Desea inactivar a ' + item.Nombres,
+                () =>
+                axios.delete(`http://192.168.1.4:3000/Clientes/${item.IdCliente}`)
+                .then(()=>{
+                    this.Clientes.splice(index, 1);
+                    this.$alertify.success('Inactivacion Realizada');
+                }).catch(error=>{
+                    this.$alertify.error(error);
+                }),
+                () => this.$alertify.error('Inactivacion Cancelada')
+            );
         },
 
         Editar(item){
@@ -191,7 +240,8 @@ export default {
             this.Cliente.Adelanto= 0
             this.Cliente.Debe = 0
             this.Cliente.Observacion = ''
-            this.Cliente.Foto = ''
+            this.Cliente.Foto = '',
+            this.Cliente.Activo = true
         },
     },
 }
