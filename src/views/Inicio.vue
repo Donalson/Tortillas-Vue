@@ -2,19 +2,38 @@
   <v-container text-aling-center>
     <v-row class="justify-center" wrap>
 
-      <v-col cols="6" md="4"
-          v-for="(card, index) in cards" :key="index">
-          <v-card :to="'/'+card.Desc">
-            <v-img
-              :src="card.src"
-              class="black--text align-end"
-              height="20%"
-            >
-              <v-card-title v-text="card.Desc"></v-card-title>
+      <v-col cols="6" md="4">
+          <v-card to="/Pedidos">
+            <v-img src="@/assets/Ordenes.png" class="black--text align-end" height="20%">
+              <v-card-title>Pedidos</v-card-title>
             </v-img>
-
           </v-card>
-        </v-col>
+      </v-col>
+
+      <v-col cols="6" md="4">
+          <v-card to="/Clientes">
+            <v-img src="@/assets/Clientes.png" class="black--text align-end" height="20%">
+              <v-card-title>Clientes</v-card-title>
+            </v-img>
+          </v-card>
+      </v-col>
+
+      <v-col cols="6" md="4">
+          <v-card to="/Tortillas">
+            <v-img src="@/assets/Tortilla.png" class="black--text align-end" height="20%">
+              <v-card-title>Tortillas</v-card-title>
+            </v-img>
+          </v-card>
+      </v-col>
+
+      <v-col cols="6" md="4">
+          <v-card to="/Ventas">
+            <v-img src="@/assets/Ventas.png" class="black--text align-end" height="20%">
+              <v-card-title>Ventas</v-card-title>
+            </v-img>
+          </v-card>
+      </v-col>
+
     </v-row>
   </v-container>
 </template>
@@ -25,12 +44,6 @@ export default {
   name: 'Inicio',
 
   data: () => ({
-      cards: [
-        { Desc: 'Pedidos', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Ordenes.png', flex: 6 },
-        { Desc: 'Clientes', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Clientes.png', flex: 6 },
-        { Desc: 'Tortillas', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Tortilla.png', flex: 6 },
-        { Desc: 'Ventas', src: 'https://raw.githubusercontent.com/Donalson/Tortillas-Vue/main/src/assets/Ventas.png', flex: 6 },
-      ],
     }),
     
   components: {

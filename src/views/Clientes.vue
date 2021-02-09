@@ -2,8 +2,14 @@
   <v-container>
       <v-row wrap class="mt-5">
           <v-col>
-              
-              <v-dialog v-model="Modal" persistent>
+
+              <v-toolbar flat>
+                  <v-toolbar-title>Clientes</v-toolbar-title>
+                  <v-divider class="mx-4" inset vertical></v-divider>
+                  <v-spacer></v-spacer>
+                  <v-text-field v-model="Buscar" append-icon="mdi-magnify" label="Buscar" single-line hide-details color="green"></v-text-field>
+                  <v-spacer></v-spacer>
+                  <v-dialog v-model="Modal" persistent>
                   <template v-slot:activator="{ on, attrs}">
                       <v-btn color="green" dark v-bind="attrs" v-on="on">Registrar Cliente</v-btn>
                   </template>
@@ -52,8 +58,7 @@
                                        v-model="Cliente.Observacion" color="green"></v-text-field>
                                   </v-col>
                                   <v-col cols="12" sm="6" md="4">
-                                      <v-text-field prepend-icon="mdi-card-account-phone" label="Foto" required
-                                      v-model="Cliente.Foto" color="green"></v-text-field>
+                                      <v-file-input accept="image/*" prepend-icon="mdi-camera" chips show-size truncate-length="30" label="Foto" color="green" v-model="Cliente.Foto"></v-file-input>
                                   </v-col>
                                   <v-col cols="12" sm="6" md="4" v-if="ModoEdicion">
                                       <v-checkbox prepend-icon="mdi-alpha-a-circle" label="Activo" required
@@ -69,9 +74,10 @@
                           <v-btn color="red" text @click="Limpiar">Cancelar <v-icon right>mdi-cancel</v-icon></v-btn>
                       </v-card-actions>
                   </v-card>
-              </v-dialog>
+                  </v-dialog>
+              </v-toolbar>
 
-              <v-simple-table fixed-header>
+              <v-simple-table fixed-header :search="Buscar">
                   <template v-slot:default>
                       <thead>
                           <tr>
@@ -87,7 +93,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr v-for="(item, index) in Clientes" :key="index">
+                          <tr v-for="(item, index) in Busqueda" :key="index">
                               <td>{{ item.IdCliente }}</td>
                               <td>{{ item.Nombres }} {{ item.Apellidos }}</td>
                               <td>{{ item.Direccion }}</td>
@@ -97,8 +103,9 @@
                               <td>{{ item.Debe }}</td>
                               <td>{{ item.Observacion }}</td>
                               <td>
-                                  <v-icon small color="yellow" class="mr-2" @click="Editar(item)">mdi-pencil</v-icon>
-                                  <v-icon small color="red" @click="Eliminar(item, index)">mdi-delete</v-icon>
+                                  <v-icon small color="green" class="mr-2" @click="MostrarPerfil(item)">mdi-eye</v-icon>
+                                  <v-icon small color="yellow" @click="Editar(item)">mdi-pencil</v-icon>
+                                  <v-icon small color="red" @click="Eliminar(item)">mdi-delete</v-icon>
                               </td>
                           </tr>
                       </tbody>
@@ -106,6 +113,69 @@
               </v-simple-table>
           </v-col>
       </v-row>
+
+      <v-row justify="center">
+          <v-dialog v-model="Perfil" transition="dialog-bottom-transition" max-width="80%">
+              <v-card class="mx-auto">
+                    <v-card-title class="headline">
+                        <v-avatar size="60" v-if="InfoPerfil.Foto != null">
+                            <img
+                                alt="Cliente"
+                                :src="InfoPerfil.Foto"
+                            >
+                        </v-avatar>
+                        <p class="ml-3">{{ InfoPerfil.Nombres }}  {{ InfoPerfil.Apellidos }}</p>
+                    </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-alpha-c-circle" label="Cod." readonly 
+                                v-model="InfoPerfil.IdCliente" color="green"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-account" label="Nombres" readonly 
+                                v-model="InfoPerfil.Nombres" color="green" maxlength="30"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-account" label="Apellidos" readonly 
+                                v-model="InfoPerfil.Apellidos" color="green" maxlength="30"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-directions" label="Direccion" readonly
+                                v-model="InfoPerfil.Direccion" color="green" maxlength="50"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-cellphone" label="Telefono" readonly
+                                v-model="InfoPerfil.Telefono" color="green" type="number"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-file-document" label="NIT" readonly
+                                v-model="InfoPerfil.Nit" color="green" maxlength="15"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-head-question-outline" label="Adelanto" readonly
+                                v-model="InfoPerfil.Adelanto" color="green" type="number"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field prepend-icon="mdi-head-question-outline" label="Debe" readonly
+                                v-model="InfoPerfil.Debe" color="green" type="number"></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field prepend-icon="mdi-clipboard-text" label="Anotaciones" readonly
+                                v-model="InfoPerfil.Observacion" color="green"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-checkbox prepend-icon="mdi-alpha-a-circle" label="Activo" readonly
+                                v-model="InfoPerfil.Activo" color="green"></v-checkbox>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+              </v-card>
+          </v-dialog>
+      </v-row>
+
   </v-container>
 </template>
 
@@ -118,7 +188,9 @@ export default {
 
             Clientes: [],
             Modal: false,
+            Perfil: false,
             ModoEdicion: false,
+            Buscar: '',
             
             Cliente:{
                 IdCliente: 0,
@@ -130,8 +202,25 @@ export default {
                 Adelanto: 0,
                 Debe: 0,
                 Observacion: '',
-                Foto: '',
+                Foto: null,
+                Vieja: '',
                 Activo: true,
+            },
+
+            InfoPerfil:{
+                IdCliente: 0,
+                Nombres: '',
+                Apellidos: '',
+                Direccion: '',
+                Telefono: '',
+                Nit: '',
+                Adelanto: 0,
+                Debe: 0,
+                Observacion: '',
+                Foto: '',
+                FC: '',
+                FE: '',
+                Activo: null,
             },
         }
     },
@@ -139,6 +228,18 @@ export default {
     created(){
         //Obtener Lista de clientes cuando se carga la vista de clientes
         this.GetClientes();
+    },
+
+    computed:{
+        Busqueda(){
+            const BuquedaLimpia = this.Buscar.toLowerCase().trim();
+
+            if(!BuquedaLimpia){
+                return this.Clientes
+            }else{
+                return this.Clientes.filter((item) => item.Nombres.toLowerCase().includes(BuquedaLimpia) || item.Direccion.toLowerCase().includes(BuquedaLimpia))
+            }
+        },
     },
 
     methods:{
@@ -161,7 +262,11 @@ export default {
                     Direccion: this.Cliente.Direccion, Telefono: this.Cliente.Telefono,
                     Nit: this.Cliente.Nit, Adelanto: this.Cliente.Adelanto,
                     Debe: this.Cliente.Debe, Observacion: this.Cliente.Observacion,
-                    Foto: this.Cliente.Foto
+                } 
+                if(this.Cliente.Foto != null){
+                    var NFoto = this.Cliente.Nombres + " " + this.Cliente.Apellidos + "." + this.Cliente.Foto.name.split('.').pop();
+                    params.Foto = NFoto;
+                    this.SubirFoto(NFoto);
                 }
                 axios.post(`http://192.168.1.4:3000/Clientes`, params).then(res=>{
                     this.GetClientes();this.Modal = false;
@@ -183,7 +288,13 @@ export default {
                     Direccion: this.Cliente.Direccion, Telefono: this.Cliente.Telefono,
                     Nit: this.Cliente.Nit, Adelanto: this.Cliente.Adelanto,
                     Debe: this.Cliente.Debe, Observacion: this.Cliente.Observacion,
-                    Foto: this.Cliente.Foto, Activo: this.Cliente.Activo
+                    Activo: this.Cliente.Activo
+                }
+                if(this.Cliente.Foto != null){
+                    if(this.Cliente.Vieja != ''){this.BorrarFoto()}
+                    var NFoto = this.Cliente.Nombres + " " + this.Cliente.Apellidos + "." + this.Cliente.Foto.name.split('.').pop();
+                    params.Foto = NFoto;
+                    this.SubirFoto(NFoto);
                 }
                 axios.put(`http://192.168.1.4:3000/Clientes/${this.Cliente.IdCliente}`, params).then(res=>{
                     this.GetClientes();this.Modal = false;
@@ -197,14 +308,14 @@ export default {
             }
         },
 
-        Eliminar(item, index){
+        Eliminar(item){
             this.$alertify.confirmWithTitle(
                 'Inactivar Cliente',
                 'Desea inactivar a ' + item.Nombres,
                 () =>
                 axios.delete(`http://192.168.1.4:3000/Clientes/${item.IdCliente}`)
                 .then(()=>{
-                    this.Clientes.splice(index, 1);
+                    this.GetClientes()
                     this.$alertify.success('Inactivacion Realizada');
                 }).catch(error=>{
                     this.$alertify.error(error);
@@ -224,8 +335,39 @@ export default {
             this.Cliente.Adelanto = item.Adelanto
             this.Cliente.Debe = item.Debe
             this.Cliente.Observacion = item.Observacion
-            this.Cliente.Foto = item.Foto
+            if(item.Foto != null){this.Cliente.Vieja = item.Foto}
             this.Modal = true;
+        },
+
+        MostrarPerfil(item){
+            this.InfoPerfil.IdCliente = item.IdCliente
+            this.InfoPerfil.Nombres = item.Nombres
+            this.InfoPerfil.Apellidos = item.Apellidos
+            this.InfoPerfil.Direccion = item.Direccion
+            this.InfoPerfil.Telefono = item.Telefono
+            this.InfoPerfil.Nit = item.Nit
+            this.InfoPerfil.Adelanto = item.Adelanto
+            this.InfoPerfil.Debe = item.Debe
+            this.InfoPerfil.Observacion = item.Observacion
+            if(item.Foto != null){this.InfoPerfil.Foto = "http://192.168.1.4:3000/" + item.Foto}
+            this.InfoPerfil.FC = item.FC
+            this.InfoPerfil.FE = item.FE
+            this.InfoPerfil.Activo = item.Activo
+
+            this.Perfil = true;
+        },
+
+        SubirFoto(Nombre){
+            const formData = new FormData()
+            formData.append('Foto', this.Cliente.Foto, Nombre)
+            axios.post('http://192.168.1.4:3000/SubirFoto', formData).then(res => {
+                this.$alertify.success("Foto Guardada");
+            })
+        },
+
+        BorrarFoto(){
+            const data = {FotoVieja: this.Cliente.Vieja}
+            axios.post('http://192.168.1.4:3000/BorrarFoto', data)
         },
 
         Limpiar(){
@@ -240,7 +382,8 @@ export default {
             this.Cliente.Adelanto= 0
             this.Cliente.Debe = 0
             this.Cliente.Observacion = ''
-            this.Cliente.Foto = '',
+            this.Cliente.Foto = null,
+            this.Cliente.Vieja = '',
             this.Cliente.Activo = true
         },
     },
