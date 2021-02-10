@@ -452,7 +452,7 @@ export default {
             " " +
             this.Cliente.Apellidos +
             "." +
-            this.Cliente.Foto.name.split(".").pop();
+            this.Cliente.Foto.name.split(".").pop().toLowerCase();
           params.Foto = NFoto;
           this.SubirFoto(NFoto);
         }
@@ -501,7 +501,7 @@ export default {
             " " +
             this.Cliente.Apellidos +
             "." +
-            this.Cliente.Foto.name.split(".").pop();
+            this.Cliente.Foto.name.split(".").pop().toLowerCase();
           params.Foto = NFoto;
           this.SubirFoto(NFoto);
         }
@@ -574,7 +574,7 @@ export default {
       }
       this.InfoPerfil.FC = moment(item.FC).locale('es-mx', null).format('dddd, D [de] MMMM [de] YYYY  h:m A')
       if(item.FE != null){
-        this.InfoPerfil.FE = moment(item.FE).locale('es-mx').format('dddd, D [de] MMMM [de] YYYY  h:m A')
+        this.InfoPerfil.FE = moment(item.FE).locale('es-mx', null).format('dddd, D [de] MMMM [de] YYYY  h:m A')
       }
       this.InfoPerfil.Activo = item.Activo;
 
@@ -606,9 +606,9 @@ export default {
       this.Cliente.Adelanto = 0;
       this.Cliente.Debe = 0;
       this.Cliente.Observacion = "";
-      (this.Cliente.Foto = null),
-        (this.Cliente.Vieja = ""),
-        (this.Cliente.Activo = true);
+      this.Cliente.Foto = null,
+      this.Cliente.Vieja = "",
+      this.Cliente.Activo = true;
     },
   },
 };
