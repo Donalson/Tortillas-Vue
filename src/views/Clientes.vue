@@ -560,6 +560,7 @@ export default {
     },
 
     MostrarPerfil(item) {
+      this.InfoPerfil = [];
       this.InfoPerfil.IdCliente = item.IdCliente;
       this.InfoPerfil.Nombres = item.Nombres;
       this.InfoPerfil.Apellidos = item.Apellidos;

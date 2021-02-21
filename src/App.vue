@@ -1,9 +1,10 @@
 <template>
   <v-app>
-
     <v-app-bar app color="success" dark dense>
-      
-      <v-app-bar-nav-icon @click="mver = !mver" class="d-md-none"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        @click="mver = !mver"
+        class="d-md-none"
+      ></v-app-bar-nav-icon>
 
       <div class="d-flex align-center">
         <v-img
@@ -16,33 +17,45 @@
         />
       </div>
 
-      <v-toolbar-title><v-btn plain to="/">Antojitos Heidy</v-btn></v-toolbar-title>
+      <v-toolbar-title
+        ><v-btn plain to="/">Antojitos Heidy</v-btn></v-toolbar-title
+      >
       <v-spacer></v-spacer>
       <div class="d-none d-md-block">
-        <v-btn plain to="/Pedidos"> Pedidos <v-icon right>mdi-view-list-outline</v-icon></v-btn>
-        <v-btn plain to="/Clientes"> Clientes <v-icon right>mdi-account</v-icon></v-btn>
-        <v-btn plain to="/Tortillas"> Tortillas <v-icon right>mdi-alpha-t-circle</v-icon></v-btn>
-        <v-btn plain to="/Ventas"> Ventas <v-icon right>mdi-receipt</v-icon></v-btn>
+        <v-btn plain to="/Pedidos">
+          Pedidos <v-icon right>mdi-view-list-outline</v-icon></v-btn
+        >
+        <v-btn plain to="/Clientes">
+          Clientes <v-icon right>mdi-account</v-icon></v-btn
+        >
+        <v-btn plain to="/Tortillas">
+          Tortillas <v-icon right>mdi-alpha-t-circle</v-icon></v-btn
+        >
+        <v-btn plain to="/Ventas">
+          Ventas <v-icon right>mdi-receipt</v-icon></v-btn
+        >
       </div>
-
     </v-app-bar>
 
     <v-navigation-drawer app v-model="mver" temporary color="success">
       <v-row wrap>
         <v-col cols="4"></v-col>
         <v-col class="justify-center" cols="3">
-          <v-img src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" height="45" width="40"/>
+          <v-img
+            src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+            height="45"
+            width="40"
+          />
         </v-col>
         <v-col cols="4"></v-col>
         <v-col cols="12" class="text-center">
-          <v-btn plain to="/"><p class="white--text headline">Antojitos Heidy</p></v-btn>
+          <v-btn plain to="/"
+            ><p class="white--text headline">Antojitos Heidy</p></v-btn
+          >
         </v-col>
         <v-col cols="12">
-
           <v-list>
-            
             <v-list-item-group class="white--text">
-
               <v-list-item to="/Pedidos">
                 <v-list-item-icon>
                   <v-icon>mdi-view-list-outline</v-icon>
@@ -78,31 +91,46 @@
                   </v-list-item-content>
                 </v-list-item-icon>
               </v-list-item>
-
             </v-list-item-group>
-
           </v-list>
-
         </v-col>
       </v-row>
     </v-navigation-drawer>
 
     <v-main>
-      <router-view/>
+      <router-view />
+
+      <v-dialog v-model="Loading.Estado" hide-overlay persistent width="300">
+        <v-card :color="Loading.Color" dark>
+          <v-card-text>
+            {{ Loading.Titulo }}
+            <v-progress-linear
+              indeterminate
+              color="white"
+              class="mb-0"
+            ></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
     </v-main>
   </v-app>
 </template>
 
 <script>
 
-export default {
-  name: 'App',
+import { mapState } from 'vuex';
 
-  components: {
-  },
+export default {
+  name: "App",
+
+  components: {},
 
   data: () => ({
     mver: false,
   }),
+  computed:{
+    ...mapState(['Loading'])
+  },
 };
 </script>
