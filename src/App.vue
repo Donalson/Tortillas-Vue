@@ -8,10 +8,10 @@
 
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
+          alt="Donal Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="https://i.imgur.com/HFvPKBz.png"
           transition="scale-transition"
           width="40"
         />
@@ -42,7 +42,7 @@
         <v-col cols="4"></v-col>
         <v-col class="justify-center" cols="3">
           <v-img
-            src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+            src="https://i.imgur.com/HFvPKBz.png"
             height="45"
             width="40"
           />

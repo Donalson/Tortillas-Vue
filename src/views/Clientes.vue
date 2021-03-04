@@ -402,15 +402,16 @@ export default {
 
   computed: {
     Busqueda() {
-      const BuquedaLimpia = this.Buscar.toLowerCase().trim();
+      const BusquedaLimpia = this.Buscar.toLowerCase().trim();
 
-      if (!BuquedaLimpia) {
+      if (!BusquedaLimpia) {
         return this.Clientes;
       } else {
         return this.Clientes.filter(
           (item) =>
-            item.Nombres.toLowerCase().includes(BuquedaLimpia) ||
-            item.Direccion.toLowerCase().includes(BuquedaLimpia)
+            item.Nombres.toLowerCase().includes(BusquedaLimpia) ||
+            item.Direccion.toLowerCase().includes(BusquedaLimpia) ||
+            item.Nit.toLowerCase().includes(BusquedaLimpia)
         );
       }
     },

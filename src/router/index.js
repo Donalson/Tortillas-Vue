@@ -27,6 +27,12 @@ const routes = [
     name: 'Pedidos',
     component: () => import(/* webpackChunkName: "Pedidos" */ '../views/Pedidos.vue')
   },
+
+  {
+    path: '/Ventas',
+    name: 'Ventas',
+    component: () => import(/* webpackChunkName: "Ventas" */ '../views/Ventas.vue')
+  },
 ]
 
 const router = new VueRouter({

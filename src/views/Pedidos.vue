@@ -98,7 +98,7 @@
                       <v-select v-if="ModoEdicion"
                         v-model="Pedido.Cliente"
                         :items="ClientesM"
-                        item-text="Nombres"
+                        item-text="FullName"
                         item-value="IdCliente"
                         label="Clientes"
                         prepend-icon="mdi-account"
@@ -108,7 +108,7 @@
                       <v-select v-else
                         v-model="Pedido.Cliente"
                         :items="ClientesM"
-                        item-text="Nombres"
+                        item-text="FullName"
                         item-value="IdCliente"
                         label="Clientes"
                         prepend-icon="mdi-account"
@@ -373,8 +373,10 @@ export default {
               this.Pedidos.push(Temporal[i])
             }
           }
+          this.VerFechaModal = false
         }else{
           this.$alertify.error("No hay pedidos en la fecha " + Fecha)
+          this.Pedidos = []
         }
       } catch (e) {
         console.log(e);
@@ -386,6 +388,9 @@ export default {
     async GetClientes() {
       try {
         let Get = await axios.get(`http://192.168.1.4:3000/Clientes`)
+        for(var i = 0; i < Get.data.length; i++){
+          Get.data[i].FullName = Get.data[i].Nombres + " " + Get.data[i].Apellidos
+        }
         this.Clientes = await Get.data
       } catch (e) {
         console.log(e);
