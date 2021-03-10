@@ -63,7 +63,6 @@
         single-line
         hide-details
         color="green"
-        clearable
       ></v-text-field>
       <v-spacer></v-spacer>
       <!-- Formulario de Registro de Ventas -->
@@ -162,7 +161,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green" text 
+            <v-btn color="green" text @click="Agregar"
               >Guardar <v-icon right>mdi-content-save</v-icon></v-btn
             >
             <v-btn color="red" text @click="Limpiar"
@@ -261,7 +260,8 @@ export default {
           (item) =>
             item.Nombres.toLowerCase().includes(BuquedaLimpia) ||
             item.Apellidos.toLowerCase().includes(BuquedaLimpia) ||
-            item.Direccion.toLowerCase().includes(BuquedaLimpia)
+            item.Direccion.toLowerCase().includes(BuquedaLimpia) ||
+            item.Fecha.includes(BuquedaLimpia)
         );
       }
     },
@@ -399,53 +399,94 @@ export default {
     },
 
     async Agregar() {
-      if (this.Pedido.Cliente > 0 && this.Pedido.Fecha != "") {
-        if(this.Pedido.Cantidad != 0 || this.Pedido.Cantidad2 != 0 || this.Pedido.Cantidad3 != 0){
+      //Objeto de verificacion
+      const mal = {Error: false, Nombres:[]};
 
-          var infoinicial = {Fecha: this.Pedido.Fecha, Cliente: this.Pedido.Cliente};
-
-          if(this.Pedido.Cantidad > 0){
-            var params = infoinicial;
-            params.Tortilla = 1
-            params.Cantidad = this.Pedido.Cantidad
-            try{
-              await axios.post(`http://192.168.1.4:3000/Pedidos`, params)
-            } catch(e){
-              console.log(e)
-            }
+      for(var i = 0; i < this.Clientes.length; i++){
+      //Se verifica por cada cliente si tiene pedidos asignados
+        if(this.Clientes[i].Pedidos){
+          /*
+          Si el cliente tiene pedidos se verifica que el total sea menor al pago
+          en caso contrario se cambia el atributo de error a verdedero y se manda el nombre del cliente
+          a la lista de nombre del objeto de verificacion
+          */
+          if(this.Clientes[i].Pago < this.Clientes[i].Total){
+            mal.Error = true
+            mal.Nombres.push({Nombre: this.Clientes[i].FullName})
           }
-
-          if(this.Pedido.Cantidad2 > 0){
-            var params = infoinicial;
-            params.Tortilla = 2
-            params.Cantidad = this.Pedido.Cantidad2
-            try{
-              await axios.post(`http://192.168.1.4:3000/Pedidos`, params)
-            } catch(e){
-              console.log(e)
-            }
-          }
-
-          if(this.Pedido.Cantidad3 > 0){
-            var params = infoinicial;
-            params.Tortilla = 3
-            params.Cantidad = this.Pedido.Cantidad3
-            try{
-              await axios.post(`http://192.168.1.4:3000/Pedidos`, params)
-            } catch(e){
-              console.log(e)
-            }
-          }
-
-          this.GetVentas(this.VerFecha);
-          this.Modal = false;
-          this.Limpiar();
-          this.$alertify.success("Ventas Registradas");
-        }else{
-          this.$alertify.error("Debe llenar al menos una cantidad");
         }
+      };
+
+      //En caso de que el objeto de valicacion no contenga el error en verdadero
+      if (!mal.Error) {
+        //Se recorre cada cliente
+        for(var i = 0; i < this.Clientes.length; i++){
+          //Si el cliente tiene pedidos asignados
+          if(this.Clientes[i].Pedidos){
+            //Se crea un objeto con los datos de la venta
+            var params = {}
+            params.Fecha = this.VentasFecha
+            params.Cliente = this.Clientes[i].IdCliente
+            params.SubTotal = this.Clientes[i].SubTotal
+            params.Total = this.Clientes[i].Total
+            params.Pago = this.Clientes[i].Pago
+            params.Cambio = this.Clientes[i].Cambio
+
+            //Se crae una variable para guardar el numero de venta
+            var id
+
+            //Se crea la venta con la informacion anterior
+            try{
+              await axios.post(`http://192.168.1.4:3000/Ventas`, params).then((res) => {
+                //El id devuelto por la api se guarda en la variable ya mencionada
+                id = res.data.Venta
+              });
+            } catch(e){
+              console.log(e)
+            }
+
+            //Se verifica si el id de la factura es valido
+            if(id > 0){
+              //Se recorren todos los pedidos del cliente
+              for (let index = 0; index < this.Clientes[i].Pedidos.length; index++) {
+                //Se almacenan los pedidos en un objeto
+                let detalle = {}
+                detalle.Factura = id
+                detalle.Descripcion = this.Clientes[i].Pedidos[index].Descripcion
+                detalle.Cantidad = this.Clientes[i].Pedidos[index].Cantidad
+                detalle.Precio = this.Clientes[i].Pedidos[index].Precio
+                detalle.Total = this.Clientes[i].Pedidos[index].Cantidad * this.Clientes[i].Pedidos[index].Precio
+                try{
+                  //Se manda a la base de datos como detalle de la factura creada anteriormente
+                  await axios.post(`http://192.168.1.4:3000/DetallesVentas`, detalle)
+                } catch(e){
+                  console.log(e)
+                }
+              }
+            }
+
+            //Se cambia el estado de los pedidos a registrados en ventas
+            let Cliente = {Fecha: this.VentasFecha, Cliente: this.Clientes[i].IdCliente}
+            try{
+              await axios.put(`http://192.168.1.4:3000/PedidosRVenta`, Cliente)
+            }catch(e){
+              console.log(e)
+            }
+          }
+        }
+        if(this.VerFecha != ''){
+          this.GetVentas(this.VerFecha);
+        }else{
+          this.GetVentas(this.VerCliente);
+        }
+        this.Modal = false;
+        this.Limpiar();
+        this.$alertify.success("Ventas Registradas");
       } else {
-        this.$alertify.error("Complete el formulario primero");
+        //Si el objeto de validacion encuentra errores, imprimira un mensaje por cada nombre agregado
+        for(var i = 0; i < mal.Nombres.length; i++){
+          this.$alertify.error("Revise la venta de " + mal.Nombres[i].Nombre);
+        }
       }
     },
 
@@ -453,6 +494,7 @@ export default {
       this.Modal = false;this.RegistrarVentas = false
       this.VentasFecha = ''
       this.GetClientes()
+      this.VerificarPendientes()
     },
 
     FormatoFecha(Fecha){
