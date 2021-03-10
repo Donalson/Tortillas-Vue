@@ -102,7 +102,7 @@
 
       <v-dialog v-model="Loading.Estado" hide-overlay persistent width="300">
         <v-card :color="Loading.Color" dark>
-          <v-card-text>
+          <v-card-text class="text-center">
             {{ Loading.Titulo }}
             <v-progress-linear
               indeterminate

@@ -42,6 +42,7 @@
             single-line
             hide-details
             color="green"
+            clearable
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="Modal" persistent>
