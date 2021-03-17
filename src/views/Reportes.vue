@@ -18,6 +18,48 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
+    <v-card
+      class="mx-auto text-center"
+      color="green"
+      dark
+      max-width="600"
+    >
+    <v-card-text>
+      <v-sheet color="rgba(0, 0, 0, .12)">
+        <v-sparkline
+          :value="TTortillas"
+          :labels="['Pequeñas','Mediana','Grandes']"
+          color="rgba(255, 255, 255, .7)"
+          height="100"
+          padding="24"
+          stroke-linecap="round"
+          smooth
+        >
+          <template v-slot:label="item">
+            {{ item.value }}
+          </template>
+        </v-sparkline>
+      </v-sheet>
+    </v-card-text>
+
+    <v-card-text>
+      <div class="display-1 font-weight-thin">
+        Pedidos de Tortillas
+      </div>
+    </v-card-text>
+
+    <v-divider></v-divider>
+
+    <!-- <v-card-actions class="justify-center">
+      <v-btn
+        block
+        text
+      >
+        Go to Report
+      </v-btn>
+    </v-card-actions> -->
+  </v-card>
+
   </v-container>
 </template>
 
@@ -31,6 +73,8 @@ export default {
     return{
       //Arrays de informacion
       Clientes: [],Tortillas: [],Pedidos:[], Ventas: [],
+      //Variable
+      Buscar:'',TTortillas:[]
     };
   },
 
@@ -71,7 +115,7 @@ export default {
     },
 
     async GetPedidos(){
-      let Pedidos
+      var Pedidos,Peq=0,Med=0,Gra=0
       try {
         await axios.get(`http://192.168.1.4:3000/Pedidos`).then((res)=>{
           Pedidos = res.data
@@ -80,6 +124,18 @@ export default {
         console.log(error)
       }
       this.Pedidos = await Pedidos
+      for(let i = 0;i < Pedidos.length; i++){
+        if(Pedidos[i].Tortilla == 1){
+          Gra = Gra + parseInt(Pedidos[i].Cantidad)
+        }
+        if(Pedidos[i].Tortilla == 2){
+          Med = Med + parseInt(Pedidos[i].Cantidad)
+        }
+        if(Pedidos[i].Tortilla == 3){
+          Peq = Peq + parseInt(Pedidos[i].Cantidad)
+        }
+      }
+      this.TTortillas.push(parseInt(Peq),parseInt(Med),parseInt(Gra))
     },
 
     async GetVentas(){
