@@ -15,6 +15,9 @@ Vue.use(VueAxios, axios)
 //Importacion de Alertas de Alertify
 import VueAlertify from 'vue-alertify'
 Vue.use(VueAlertify)
+//Graficas de Google
+import VueGoogleCharts from 'vue-google-charts'
+Vue.use(VueGoogleCharts)
 
 Vue.config.productionTip = false
 
