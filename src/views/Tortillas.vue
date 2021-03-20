@@ -58,18 +58,6 @@
                         type="number"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-file-input
-                        accept="image/*"
-                        prepend-icon="mdi-camera"
-                        chips
-                        show-size
-                        truncate-length="30"
-                        label="Foto"
-                        color="green"
-                        v-model="Tortilla.Foto"
-                      ></v-file-input>
-                    </v-col>
                     <v-col cols="12" sm="6" md="4" v-if="ModoEdicion">
                       <v-checkbox
                         prepend-icon="mdi-alpha-a-circle"
@@ -156,8 +144,6 @@ export default {
         IdTortilla: 0,
         Descripcion: "",
         Precio: 0,
-        Foto: null,
-        Vieja: '',
         Activa: true,
       },
 
@@ -205,25 +191,14 @@ export default {
           Precio: this.Tortilla.Precio,
           Activo: this.Tortilla.Activa,
         };
-        if (this.Tortilla.Foto != null) {
-          var NFoto =
-            this.Tortilla.Descripcion +
-            "." +
-            this.Tortilla.Foto.name.split(".").pop().toLowerCase();
-          params.Foto = NFoto;
-          this.SubirFoto(NFoto);
-        }
-        axios
-          .post(`http://192.168.1.4:3000/Tortillas`, params)
-          .then((res) => {
-            this.GetTortillas();
-            this.Modal = false;
-            this.Limpiar();
-            this.$alertify.success("Tortilla Registrada");
-          })
-          .catch((error) => {
-            this.$alertify.error(error);
-          });
+        axios.post(`http://192.168.1.4:3000/Tortillas`, params).then((res) => {
+          this.GetTortillas();
+          this.Modal = false;
+          this.Limpiar();
+          this.$alertify.success("Tortilla Registrada");
+        }).catch((error) => {
+          this.$alertify.error(error);
+        });
       } else {
         this.$alertify.error("Complete el formulario primero");
       }
@@ -239,31 +214,14 @@ export default {
           Precio: this.Tortilla.Precio,
           Activo: this.Tortilla.Activa,
         };
-        if (this.Tortilla.Foto != null) {
-          if (this.Tortilla.Vieja != "") {
-            this.BorrarFoto();
-          }
-          var NFoto =
-            this.Tortilla.Descripcion +
-            "." +
-            this.Tortilla.Foto.name.split(".").pop().toLowerCase();
-          params.Foto = NFoto;
-          this.SubirFoto(NFoto);
-        }
-        axios
-          .put(
-            `http://192.168.1.4:3000/Tortillas/${this.Tortilla.IdTortilla}`,
-            params
-          )
-          .then((res) => {
-            this.GetTortillas();
-            this.Modal = false;
-            this.Limpiar();
-            this.$alertify.success("Tortilla Actualizado");
-          })
-          .catch((error) => {
-            this.$alertify.error(error);
-          });
+        axios.put(`http://192.168.1.4:3000/Tortillas/${this.Tortilla.IdTortilla}`,params).then((res) => {
+          this.GetTortillas();
+          this.Modal = false;
+          this.Limpiar();
+          this.$alertify.success("Tortilla Actualizado");
+        }).catch((error) => {
+          this.$alertify.error(error);
+        });
       } else {
         this.$alertify.error("Complete el formulario primero");
       }
@@ -274,15 +232,12 @@ export default {
         "Desactivar Tortilla",
         "Desea desactivar " + item.Descripcion,
         () =>
-          axios
-            .delete(`http://192.168.1.4:3000/Tortillas/${item.IdTortilla}`)
-            .then(() => {
-              this.GetTortillas();
-              this.$alertify.success("Inactivacion Realizada");
-            })
-            .catch((error) => {
-              this.$alertify.error(error);
-            }),
+          axios.delete(`http://192.168.1.4:3000/Tortillas/${item.IdTortilla}`).then(() => {
+            this.GetTortillas();
+            this.$alertify.success("Inactivacion Realizada");
+          }).catch((error) => {
+            this.$alertify.error(error);
+          }),
         () => this.$alertify.error("Inactivacion Cancelada")
       );
     },
@@ -292,23 +247,7 @@ export default {
       this.Tortilla.IdTortilla = item.IdTortilla;
       this.Tortilla.Descripcion = item.Descripcion;
       this.Tortilla.Precio = item.Precio;
-      if (item.Foto != null) {
-        this.Tortilla.Vieja = item.Foto;
-      }
       this.Modal = true;
-    },
-
-    SubirFoto(Nombre) {
-      const formData = new FormData();
-      formData.append("Foto", this.Tortilla.Foto, Nombre);
-      axios.post("http://192.168.1.4:3000/SubirFoto", formData).then((res) => {
-        this.$alertify.success("Foto Guardada");
-      });
-    },
-
-    BorrarFoto() {
-      const data = { FotoVieja: this.Tortilla.Vieja };
-      axios.post("http://192.168.1.4:3000/BorrarFoto", data);
     },
 
     Limpiar() {
@@ -317,8 +256,6 @@ export default {
       this.Tortilla.IdTortilla = 0;
       this.Tortilla.Descripcion = "";
       this.Tortilla.Precio = 0;
-      this.Tortilla.Foto = null;
-      this.Tortilla.Vieja = "";
       this.Tortilla.FC = "";
       this.Tortilla.FE = ""
       this.Tortilla.Activa = true;
