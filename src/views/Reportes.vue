@@ -341,20 +341,19 @@ export default {
       //Configuraciones de los graficos
       charts:{
         chartTortillas: {
-          chart: {
-            title: 'Pedidos de Tortillas'
-          }
+          title: 'Pedidos de Tortillas',
+          width: '100%',
+          height: 300,
         },
         chartClientes: {
-          chart: {
-            title: 'Pedidos de Clientes',
-            subtitle: ''
-          }
+          title: 'Pedidos de Clientes',
+          width: '100%',
+          height: 300,
         },
         chartVentas: {
-          chart: {
-            title: 'Ventas'
-          }
+          title: 'Ventas',
+          width: '100%',
+          height: 300,
         },
       }
     };
