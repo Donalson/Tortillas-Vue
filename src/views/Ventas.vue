@@ -352,9 +352,9 @@ export default {
               this.FechasPedidos.push(this.FormatoFecha(Get.data[i].Fecha));
             }
           }
-          if(Fechas.length>0){this.$alertify.warning("Pedidos Pendientes de registrar en Ventas de Fecha(s) " + Fechas)}
-          else{this.$alertify.success("No hay Pedidos pedientes de registrar")}
-        }
+          if(Fechas.length>0){this.$alertify.warning("Pedidos Pendientes de registrar en Ventas de Fecha(s) " + Fechas)
+          }else{this.$alertify.success("No hay Pedidos pedientes de registrar")}
+        }else{this.$alertify.success("No hay Pedidos pedientes de registrar")}
       }catch(e){
         console.log
       }
