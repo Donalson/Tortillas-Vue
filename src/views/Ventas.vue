@@ -30,6 +30,7 @@
             prev-icon="mdi-skip-previous"
             next-icon="mdi-skip-next"
             color="green"
+            :max="Hoy"
             @input="FechaFormulario = false"
             @change="GetVentas(VerFecha)"
           ></v-date-picker>
@@ -233,7 +234,7 @@ export default {
       //Valores booleanos de modals
       Modal: false,VerFechaModal:false,VentasModel: false,RegistrarVentas:false,
       //Valores de Inputs
-      VerCliente: '',VentasFecha: '',VerFecha: moment(new Date()).subtract(1, 'days').format("YYYY-MM-DD"),
+      VerCliente: '',VentasFecha: '',VerFecha: moment(new Date()).subtract(1, 'days').format("YYYY-MM-DD"),Hoy:moment(new Date()).format("YYYY-MM-DD"),
       //Busqueda introducida por el usuario
       Buscar: "",
     };
